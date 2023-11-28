@@ -30,17 +30,34 @@ app.get("/", (req, res) => {
     }, 5000)
 })
 
-app.get('/publish', (req, res) => {
-    const user = {
-        id: Math.floor(Math.random() * 100) + 1,
-        text: 'this is text example'
+app.get('/stream', (req, res) => {
+    try {
+        const video = {
+            id: Math.floor(Math.random() * 100) + 1,
+            title: 'redis-stream',
+            url: 'https://www.youtube.com/watch?v=Z8qcpXyMAiA',
+            duration: 120
+        }
+    
+        publisher.publish('article_video', JSON.stringify(video))
+        console.log(video)
+        res.json(video)
+    } catch (error) {
+        console.log(error)
     }
-
-    publisher.publish('article_user', JSON.stringify(user))
-
-    console.log(user)
-    res.json(user)
 })
+
+// app.get('/publish', (req, res) => {
+//     const user = {
+//         id: Math.floor(Math.random() * 100) + 1,
+//         text: 'this is text example'
+//     }
+
+//     publisher.publish('article_user', JSON.stringify(user))
+
+//     console.log(user)
+//     res.json(user)
+// })
 
 // Use setInterval to publish data every 5 seconds
 setInterval(() => {
@@ -53,6 +70,6 @@ setInterval(() => {
     publisher.publish('article_user', JSON.stringify(user));
 
     console.log(user);
-}, 5000);
+}, 500);
 
 app.listen(3080, () => console.log("server running in port", 3080))
